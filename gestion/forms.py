@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Copropriete, Coproprietaire, AssembléeGenerale, Travaux
+from .models import Copropriete, Coproprietaire, AssembleeGenerale, Travaux
 
 class CoproprieteForm(forms.ModelForm):
     class Meta:
@@ -12,9 +12,9 @@ class CoproprietaireForm(forms.ModelForm):
         model = Coproprietaire
         fields = ['nom', 'email', 'telephone', 'copropriete']
 
-class AssembléeGeneraleForm(forms.ModelForm):
+class AssembleeGeneraleForm(forms.ModelForm):
     class Meta:
-        model = AssembléeGenerale
+        model = AssembleeGenerale
         fields = ['copropriete', 'date', 'ordre_du_jour', 'proces_verbal']
 
 class TravauxForm(forms.ModelForm):

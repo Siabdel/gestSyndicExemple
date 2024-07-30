@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import Copropriete, Coproprietaire, AssembléeGenerale, Travaux
+from .models import Copropriete, Coproprietaire, AssembleeGenerale, Travaux
 
 class CoproprieteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,9 +12,9 @@ class CoproprietaireSerializer(serializers.ModelSerializer):
         model = Coproprietaire
         fields = '__all__'
 
-class AssembléeGeneraleSerializer(serializers.ModelSerializer):
+class AssembleeGeneraleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AssembléeGenerale
+        model = AssembleeGenerale
         fields = '__all__'
 
 class TravauxSerializer(serializers.ModelSerializer):

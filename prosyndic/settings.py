@@ -10,10 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os, datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Directory project au meme niveau de settings.py
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,6 +29,7 @@ SECRET_KEY = "django-insecure-anph1*myq*vth&x(f_nt48cx^^m)#3%8u9%pzm$(mo!m_b0z#k
 DEBUG = True
 
 ALLOWED_HOSTS = []
+SITE_ID = 1
 
 
 # Application definition
@@ -37,6 +41,22 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # debug tools
+    'debug_toolbar', # new
+    'corsheaders', 
+    # DRF 
+    'rest_framework',
+    # allauth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+     # Third party
+    "crispy_forms",
+    "crispy_bootstrap4",
+    "django_extensions",
+    # local
+    'gestion',
 ]
 
 MIDDLEWARE = [
@@ -47,14 +67,23 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # new
+    # Add the account middleware:
+    "allauth.account.middleware.AccountMiddleware",
+    # debug 
+    'debug_toolbar.middleware.DebugToolbarMiddleware', # new
 ]
 
 ROOT_URLCONF = "prosyndic.urls"
 
+TEMPLATES_DIR = [
+        os.path.join(BASE_DIR, 'templates'),
+        os.path.join(BASE_DIR, 'templates', 'gestion'),
+]
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": TEMPLATES_DIR,
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -99,6 +128,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -117,7 +149,26 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+# URL pour accéder aux fichiers statiques
+STATIC_URL = '/static/'
+
+# Chemin où Django cherchera les fichiers statiques
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+
+# Chemin où les fichiers statiques seront collectés (utilisé pour le déploiement)
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'staticfiles')
+
+# ManifestStaticFilesStorage is recommended in production, to prevent outdated
+# JavaScript / CSS assets being served from cache (e.g. after a Wagtail upgrade).
+# See https://docs.djangoproject.com/en/4.0/ref/contrib/staticfiles/#manifeststaticfilesstorage
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+

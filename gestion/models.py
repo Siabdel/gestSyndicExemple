@@ -1,24 +1,53 @@
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
-from .models import Copropriete, Coproprietaire, AssembléeGenerale, Travaux
-from .forms import CoproprieteForm, CoproprietaireForm, AssembléeGeneraleForm, TravauxForm
+from django.db import models
 
-class CoproprieteListView(ListView):
-    model = Copropriete
-    template_name = 'copropriete_list.html'
+class Copropriete(models.Model):
+    nom = models.CharField(max_length=200)
+    adresse = models.CharField(max_length=300)
+    nombre_lots = models.IntegerField()
 
-class CoproprieteDetailView(DetailView):
-    model = Copropriete
-    template_name = 'copropriete_detail.html'
+class Coproprietaire(models.Model):
+    nom = models.CharField(max_length=200)
+    email = models.EmailField()
+    telephone = models.CharField(max_length=20)
+    copropriete = models.ForeignKey(Copropriete, on_delete=models.CASCADE)
 
-class CoproprieteCreateView(CreateView):
-    model = Copropriete
-    form_class = CoproprieteForm
-    template_name = 'copropriete_form.html'
+class BudgetPrevisionnel(models.Model):
+    copropriete = models.ForeignKey(Copropriete, on_delete=models.CASCADE)
+    annee = models.IntegerField()
+    montant_prevu = models.DecimalField(max_digits=10, decimal_places=2)
+    montant_reel = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
-class CoproprietaireListView(ListView):
-    model = Coproprietaire
-    template_name = 'coproprietaire_list.html'
+class AppelFonds(models.Model):
+    copropriete = models.ForeignKey(Copropriete, on_delete=models.CASCADE)
+    date_appel = models.DateField()
+    montant = models.DecimalField(max_digits=10, decimal_places=2)
+    date_limite = models.DateField()
 
-# Ajoutez d'autres vues similaires pour les autres modèles
+class AssembleeGenerale(models.Model):
+    copropriete = models.ForeignKey(Copropriete, on_delete=models.CASCADE)
+    date = models.DateField()
+    ordre_du_jour = models.TextField()
+    proces_verbal = models.TextField(null=True, blank=True)
+
+class Travaux(models.Model):
+    copropriete = models.ForeignKey(Copropriete, on_delete=models.CASCADE)
+    description = models.TextField()
+    date_debut = models.DateField()
+    date_fin = models.DateField(null=True, blank=True)
+    cout = models.DecimalField(max_digits=10, decimal_places=2)
+
+class Sinistre(models.Model):
+    copropriete = models.ForeignKey(Copropriete, on_delete=models.CASCADE)
+    description = models.TextField()
+    date_sinistre = models.DateField()
+    date_resolution = models.DateField(null=True, blank=True)
+    cout = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+class ContratMaintenance(models.Model):
+    copropriete = models.ForeignKey(Copropriete, on_delete=models.CASCADE)
+    fournisseur = models.CharField(max_length=200)
+    description = models.TextField()
+    date_debut = models.DateField()
+    date_fin = models.DateField(null=True, blank=True)
+    cout_annuel = models.DecimalField(max_digits=10, decimal_places=2)

@@ -3,7 +3,7 @@ from django.views.generic import ListView
 from .models import Copropriete, Coproprietaire, AssembleeGenerale, Travaux
 
 def home(request):
-    return render(request, 'home_page.html')
+    return render(request, 'gestion/home_page.html')
 
 class CoproprieteListView(ListView):
     model = Copropriete
